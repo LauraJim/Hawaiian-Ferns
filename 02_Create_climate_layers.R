@@ -1,3 +1,5 @@
+# Create new climatic variables of temperature and precipitation
+
 library(raster)
 library(reshape2)
 library(ggplot2)
@@ -47,3 +49,51 @@ hot_mean <- calc(hot, mean)
 writeRaster(cold_mean, "cold_mean")
 writeRaster(hot_mean, "hot_mean")
 
+# get rainfall variables
+# 1. seasonality (variance)
+# 2. max rainfall averaged over wettest 3 months
+# 3. min rainfall averaged over driest 3 months 
+
+# get list of files 
+files <- list.files("StateASCIIGrids_mm/", full.names = TRUE)
+files <- files[grep(".txt", files)]
+files <- files[-grep("ann", files)]
+
+# read in rasters and store as a rasterstack
+rainfall <- vector("list", length = length(files))
+for (i in 1:length(files)) {
+  rainfall[[i]] <- raster(files[i])
+}
+rainfall_stack <- stack(rainfall)
+
+# get the sd*100 (to mirror worldclim)
+seasonality <- calc(rainfall_stack, sd)
+seasonality <- seasonality * 100
+
+# save seasonality 
+writeRaster(seasonality, "seasonality")
+
+# transform rasterstack to list of matrices
+rainfall_matrices <- vector("list", length = length(rainfall))
+for (i in 1:length(rainfall)){
+  rainfall_matrices[[i]] <- matrix(rainfall[[i]])
+}
+
+names(rainfall_matrices) <- c("Jan", "Feb", "March", "April",
+                              "May", "June", "July", "Aug",  
+                              "Sept", "Oct", "Nov", "December")
+
+# plot months to pick wet and dry 
+boxplot(rainfall_matrices)
+
+# wet months: November, December, January
+# dry months: June, July, August 
+
+wet <- rainfall_stack[[c(1, 11, 12)]]
+dry <- rainfall_stack[[c(6, 7, 8)]]
+
+wet_avg <- calc(wet, mean)
+dry_avg <- calc(dry, mean)
+
+writeRaster(wet_avg, "wet_avg")
+writeRaster(wet_avg, "dry_avg")
