@@ -15,7 +15,7 @@ library(corrplot)
 
 # DATA CLEANING 1 -------------------------------------------------------------
 # Read the occurrence data
-occ.data <- read_csv("./Data/occurrences_cleaned.csv")
+occ.data <- read_csv("./Occurrences/occurrences_cleaned.csv")
 colnames(occ.data) <- c("island","species","year","source","long","lat")
 
 plot(occ.data$long,occ.data$lat,pch=15,col=factor(occ.data$species))
@@ -46,8 +46,7 @@ occ.clean <- data.frame(island=occ.inhi$Island, species=occ.inhi$species,
                         year=occ.inhi$year, source=occ.inhi$source,
                         lon=clean.coords[,1],
                         lat=clean.coords[,2])
-write.csv(occ.clean,"./Data/occurences_cleaned.csv",
-          row.names = F)
+write.csv(occ.clean,"./Occurrences/occurences_cleaned.csv", row.names = F)
 
 # Make a new plot with cleaned occurrences-------
 p3 <- ggplot() +
@@ -128,7 +127,7 @@ colnames(occ.complete) <- c("species", "lon","lat","dif_rad","leaf_ai","rel_humi
 rm(occ.clim)
 
 # Save table
-write.csv(occ.complete,"./Data/occurrences_with_allclim_values.csv", row.names = F)
+write.csv(occ.complete,"./Occurrences/occurrences_with_allclim_values.csv", row.names = F)
 
 
 # remove any NA values from occurrence climate extracted points 
