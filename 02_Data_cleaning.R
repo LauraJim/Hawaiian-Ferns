@@ -1,6 +1,4 @@
-# Data Cleaning & 
-# Correlation plots for species: D_decora, D_decipiens, C_viridis, D_angelica,
-#                                   P_austroamericana, P_calomelanos, P_ternifolia 
+# Data Cleaning
 # First version: October, 2022
 # Last updated: September 2023
 
@@ -179,22 +177,3 @@ legend("bottomleft",
        cex = 2)
 dev.off()
 
-# Correlation (all variables)--------------------------------------------------------
-## Plot occurrences as numeric values to see climate correlation
-pdf("~/Desktop/corr_occurrences_allvars.pdf", width = 8, height = 8)
-Mcor <- cor(as.matrix(occ.complete[,4:15]))
-corrplot(Mcor, 
-         col = rev(COL2('RdBu', 200)),
-         method="number")
-dev.off()
-
-## plot the climatic layers chosen
-vars.keep <- c("dif_rad","leaf_ai","seasonality","rel_humidity","hot_mean","dry_avg")
-clim.dat.subset <- occ.complete[,vars.keep]
-Mcor.subset <- cor(as.matrix(clim.dat.subset))
-
-pdf("~/Desktop/corr_occurrences_selectedvars.pdf", width = 8, height = 8)
-corrplot(Mcor.subset, 
-         col = rev(COL2('RdBu', 200)),
-         method="number")
-dev.off()
