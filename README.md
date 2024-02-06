@@ -10,9 +10,9 @@ This repository provides all the R code used to prepare data, make analyses, and
 
 - 01_Create_climate_layers.R: code used to create temperature and precipitation-related variables from monthly means.
 
-- 02_Data_cleaning_Correlation.R: data cleaning process applied to occurrence data. This includes extracting climate values from all the candidate climatic variables and calculating pairwise correlations to discard correlated climate variables.
+- 02_Data_cleaning.R: data cleaning process applied to occurrence data.
 
-- 03_Extracting_climatic_values.R: once we selected the final occurrence points and variables to be used in the ecological niche modeling exercise, we extracted the climatic values at each occurrence site (for native and non-native species) and random sample selected from the study area, and created the data tables needed for further analyses.
+- 03_Climate_Correlation.R: extracted the climatic values at each occurrence site (for native and non-native species) and random sample selected from the study area, and created the data tables needed for further analyses. This includes extracting climate values from all the candidate climatic variables and calculating pairwise correlations to discard correlated climate variables.
 
 - 04_Niche_modeling.R: we applied the methodology proposed by Jiménez & Soberón (2022) to estimate the fundamental niches of the native fern species, using their corresponding occurrences and the random sample representing the climate availability in the Hawaiian islands. This file includes code to estimate and save the parameters of interest, create plots of the estimated niches in environmental space, and create a raster with the model's output converted into a suitability index.
 
