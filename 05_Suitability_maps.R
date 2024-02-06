@@ -1,7 +1,6 @@
 # Plotting the suitability maps for the species of ferns in Hawaii
 # Author: Laura Jimenez
 # First version: June, 2022
-# Last modification: August, 2023
 
 # Packages & Functions --------------------------------------------------
 library(tidyverse)

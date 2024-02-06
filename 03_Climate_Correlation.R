@@ -3,7 +3,6 @@
 #                                   P_austroamericana, P_calomelanos, P_ternifolia 
 
 # First version: October, 2022
-# Last update: Febraury 2023
 
 # Packages----------
 library(tidyverse)

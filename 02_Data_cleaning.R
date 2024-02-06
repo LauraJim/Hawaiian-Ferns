@@ -1,6 +1,5 @@
 # Data Cleaning
 # First version: October, 2022
-# Last updated: September 2023
 
 # Packages----------
 library(tidyverse)

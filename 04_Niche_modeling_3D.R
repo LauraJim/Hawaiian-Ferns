@@ -1,7 +1,6 @@
 # Estimating the fundamental niche of a species in a 3D environmental space
 # Author: Laura Jimenez
 # First version: June, 2022
-# Last modification: July, 2023
 
 # Packages ----------------------------
 library(tidyverse)
