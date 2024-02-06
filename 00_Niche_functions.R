@@ -336,7 +336,7 @@ bin.map <- function(spn, bmodel, pnts=NULL, col.pnts=NULL){
   basemap <- ggplot(data = bm.df, aes(x=Lon, y=Lat)) +
     geom_tile(aes(fill=as.factor(Value))) +
     scale_fill_viridis(discrete = T, option="H", name="Cell status",
-                       labels = c('Unsuitable', 'Model 1', 'Model 2', 'Models 1-2')) +
+                       labels = c('Unsuitable', 'Model 1', 'Model 2', 'Models 1 & 2')) +
     theme_void()
   if(!is.null(pnts)){
     basemap <- basemap +
@@ -373,7 +373,7 @@ bin.map12 <- function(spn, bmodel, pnts=NULL, col.pnts=NULL){
     geom_tile(aes(fill=as.factor(Value))) +
     scale_colour_manual(values=c("grey80",m12), aesthetics="fill",
                         guide = guide_legend(order = 1), name="Cell status",
-                        labels = c('Unsuitable', 'Suitable (Models 1-2)'))+
+                        labels = c('Unsuitable', 'Suitable (Models 1 & 2)'))+
     theme_void()
   if(!is.null(pnts)){
     if(!is.null(col.pnts)){
