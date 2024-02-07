@@ -10,8 +10,9 @@ source("00_Niche_functions.R")
 
 # Read input files -------------------------------------------------
 # Read PRESENCE data
-occs <- na.omit(read_csv("./Occurrences/occurrences_with_clim_values.csv",
-                         col_names = T))
+occs <- read_csv("./Occurrences/occurrences_with_clim_values.csv",
+                 col_names = T) %>% select(-year)
+occs <- na.omit(occs)
 # scale variable
 occs$seasonality <- occs$seasonality/100
 # species names
@@ -89,9 +90,9 @@ tern1
 #        width = 24, height = 12, units = "cm", dpi = 300, pointsize = 6)
 
 # If split=T' in the last block:
-ggsave(plot=ange1, filename="./Results/Model1/SuitabilityMap_m1_Dangelica_split.png",
+ggsave(plot=ange1, filename="./Results/Model1/SuitabilityMap_m1_Dangelica.png",
        width = 40, height = 8, units = "cm", dpi = 300, pointsize = 12)
-ggsave(plot=ange2, filename="./Results/Model2/SuitabilityMap_m2_Dangelica_split.png",
+ggsave(plot=ange2, filename="./Results/Model2/SuitabilityMap_m2_Dangelica.png",
        width = 40, height = 8, units = "cm", dpi = 300, pointsize = 12)
 ggsave(plot=deci1, filename="./Results/Model1/SuitabilityMap_m1_Ddecipiens.png",
        width = 40, height = 8, units = "cm", dpi = 300, pointsize = 12)
@@ -109,12 +110,12 @@ ggsave(plot=tern2, filename="./Results/Model2/SuitabilityMap_m2_Pternifolia.png"
 # PART 2: Binarization of suitability maps ---------------------------------------------
 
 # Read estimated parameters of niche models
-mles <- read_csv("./Results/Estimated_parameters_allSpecies_M1M2.csv")
+mles <- read_csv("./Results/Estimated_parameters_allSpecies_M1M2_5feb2024_10K.csv")
 
 # For Model 1: dif_rad, rel_humidity, seasonality
-occ.var1 <- c(7,9,10)
+occ.var1 <- c(6,8,9)
 # # For Model 2: leaf_ai, hot_mean, dry_avg
-occ.var2 <- c(8,11,12)
+occ.var2 <- c(7,10,11)
 
 # Doryopteris angelica
 # Model 1 with Mahalanobis estimates
@@ -189,10 +190,10 @@ writeRaster(tern12, "./Results/Models1-2/Pternifolia-Models12-categorical_95.tif
             overwrite = T)
 
 # Draw maps of model categories (optional: adding presence points of natives)
-ange12.m <- bin.map(spn="Doryopteris angelica", bmodel=ange12, pnts=angelica[,5:6]) #
-deci12.m <- bin.map(spn="Doryopteris decipiens", bmodel=deci12, pnts=decipiens[,5:6])
-deco12.m <- bin.map(spn="Doryopteris decora", bmodel=deco12, pnts=decora[,5:6])
-tern12.m <- bin.map(spn="Pellaea ternifolia", bmodel=tern12, pnts=ternifolia[,5:6])
+ange12.m <- bin.map(spn="Doryopteris angelica", bmodel=ange12) #, pnts=angelica[,4:5]
+deci12.m <- bin.map(spn="Doryopteris decipiens", bmodel=deci12) #, pnts=decipiens[,4:5]
+deco12.m <- bin.map(spn="Doryopteris decora", bmodel=deco12) #, pnts=decora[,4:5]
+tern12.m <- bin.map(spn="Pellaea ternifolia", bmodel=tern12) #, pnts=ternifolia[,4:5]
 
 x11()
 tern12.m
@@ -217,7 +218,7 @@ non.nat <- rbind(viridis, austroam, calomelanos)
 ange12 <- rast("./Results/Models1-2/Dangelica-Models12-categorical_95.tif")
 # change raster values and create single table
 ange12 <- subst(ange12, c(100,200), c(0,0))
-ange.non <- cbind(rbind(non.nat[,5:6], angelica[,5:6]),
+ange.non <- cbind(rbind(non.nat[,4:5], angelica[,4:5]),
                  c(rep(2,nrow(non.nat)),rep(1,nrow(angelica))))
 colnames(ange.non) <- c('lon','lat','cats')
 # make map
@@ -229,7 +230,7 @@ ange12pp
 # D. decipiens
 deci12 <- rast("./Results/Models1-2/Ddecipiens-Models12-categorical_95.tif")
 deci12 <- subst(deci12, c(100,200), c(0,0))
-deci.non <- cbind(rbind(non.nat[,5:6], decipiens[,5:6]),
+deci.non <- cbind(rbind(non.nat[,4:5], decipiens[,4:5]),
                  c(rep(2,nrow(non.nat)),rep(1,nrow(decipiens))))
 colnames(deci.non) <- c('lon','lat','cats')
 deci12pp <- bin.map12(spn="D. decipiens", bmodel=deci12, pnts=deci.non,
@@ -239,7 +240,7 @@ deci12pp
 # D. decora
 deco12 <- rast("./Results/Models1-2/Ddecora-Models12-categorical_95.tif")
 deco12 <- subst(deco12, c(100,200), c(0,0))
-deco.non <- cbind(rbind(non.nat[,5:6], decora[,5:6]),
+deco.non <- cbind(rbind(non.nat[,4:5], decora[,4:5]),
                   c(rep(2,nrow(non.nat)),rep(1,nrow(decora))))
 colnames(deco.non) <- c('lon','lat','cats')
 deco12pp <- bin.map12(spn="D. decora", bmodel=deco12, pnts=deco.non,
@@ -249,7 +250,7 @@ deco12pp
 # P. ternifolia
 tern12 <- rast("./Results/Models1-2/Pternifolia-Models12-categorical_95.tif")
 tern12 <- subst(tern12, c(100,200), c(0,0))
-tern.non <- cbind(rbind(non.nat[,5:6], ternifolia[,5:6]),
+tern.non <- cbind(rbind(non.nat[,4:5], ternifolia[,4:5]),
                   c(rep(2,nrow(non.nat)),rep(1,nrow(ternifolia))))
 colnames(tern.non) <- c('lon','lat','cats')
 tern12pp <- bin.map12(spn="D. ternifolia", bmodel=tern12, pnts=tern.non,
@@ -269,28 +270,28 @@ ggsave(plot=tern12pp, width = 40, height = 8, units = "cm", dpi = 400, pointsize
 
 # PART 4: identify how many occurrences are inside native niches -----------
 # non-natives
-non.ange <- extract(ange12, non.nat[,5:6], ID=F)
-length(which(non.ange>0)) *100 / nrow(non.nat) # 3.191489
+non.ange <- extract(ange12, non.nat[,4:5], ID=F)
+length(which(non.ange>0)) *100 / nrow(non.nat) # 2.645503
 
-non.deci <- extract(deci12, non.nat[,5:6], ID=F)
-length(which(non.deci>0)) *100 / nrow(non.nat) # 35.6383
+non.deci <- extract(deci12, non.nat[,4:5], ID=F)
+length(which(non.deci>0)) *100 / nrow(non.nat) # 42.32804
 
-non.deco <- extract(deco12, non.nat[,5:6], ID=F) # 54.78723
+non.deco <- extract(deco12, non.nat[,4:5], ID=F) # 65.60847
 length(which(non.deco>0)) *100 / nrow(non.nat)
 
-non.tern <- extract(tern12, non.nat[,5:6], ID=F) # 33.51064
+non.tern <- extract(tern12, non.nat[,4:5], ID=F) # 34.39153
 length(which(non.tern>0)) *100 / nrow(non.nat)
 # natives
-n.ange <- extract(ange12, angelica[,5:6], ID=F)
+n.ange <- extract(ange12, angelica[,4:5], ID=F)
 length(which(n.ange>0)) *100 / nrow(angelica) # 82.75862
 
-n.deci <- extract(deci12, decipiens[,5:6], ID=F)
-length(which(n.deci>0)) *100 / nrow(decipiens) # 90.90909
+n.deci <- extract(deci12, decipiens[,4:5], ID=F)
+length(which(n.deci>0)) *100 / nrow(decipiens) # 91.11111
 
-n.deco <- extract(deco12, decora[,5:6], ID=F) # 90
+n.deco <- extract(deco12, decora[,4:5], ID=F) # 100
 length(which(n.deco>0)) *100 / nrow(decora)
 
-n.tern <- extract(tern12, ternifolia[,5:6], ID=F) # 92.95775
+n.tern <- extract(tern12, ternifolia[,4:5], ID=F) # 96.20253
 length(which(n.tern>0)) *100 / nrow(ternifolia)
 
 ### END
