@@ -12,8 +12,9 @@ source("00_Niche_functions.R")
 # MAIN -------------------------------------------------
 
 # Read PRESENCE data
-occs <- na.omit(read_csv("./Occurrences/occurrences_with_clim_values.csv",
-                 col_names = T))
+occs <- read_csv("./Occurrences/occurrences_with_clim_values.csv",
+                 col_names = T) %>% select(-year)
+occs <- na.omit(occs)
 # scale variable
 occs$seasonality <- occs$seasonality/100
 # identify rows such that leaf_ai==0
@@ -80,11 +81,11 @@ colnames(Mclim)
 # 3D, for all the species ---------------------------------
 
 # For Model 1: dif_rad, rel_humidity, seasonality
-occ.var1 <- c(7,9,10)
+occ.var1 <- c(6,8,9)
 M.var1 <- c(1,3,4)
 mod.lab1 <- "Model1"
 # # For Model 2: leaf_ai, hot_mean, dry_avg
-occ.var2 <- c(8,11,12)
+occ.var2 <- c(7,10,11)
 M.var2 <- c(2,5,6)
 mod.lab2 <- "Model2"
 
@@ -127,11 +128,8 @@ mles2 <- cbind(rep("Model 2", length(spname)), spname, mles2)
 colnames(mles2) <- colnames(mles1)
 
 all.mles <- rbind(mles1, mles2)
-write.csv(all.mles, "./Results/Estimated_parameters_allSpecies_M1M2.csv", row.names = F)
-
-# Run instead of previous section -----------------------------
-# All the resuts generated above were saved into this .RData file
-load("MLEs_saved.RData")
+write.csv(all.mles, "./Results/Estimated_parameters_allSpecies_M1M2_5feb2024_10K.csv",
+          row.names = F)
 
 # PLOTS in a 3D niche space ----------------------------------------
 
@@ -156,7 +154,7 @@ niches3D_m1 <- function(pback=TRUE,col.oc, sh.oc, a.el, col.el){
 
   #add estimated ellipsis
   # Doryopteris angelica
-  wire3d(ellipse3d(x=mod1.ange$maha.sigma, centre = mod1.ange$maha.mu),
+  wire3d(ellipse3d(x=mod1.ange$wn.sigma, centre = mod1.ange$wn.mu),
          alpha = a.el, col = col.el[2], lit=F)
   # Doryopteris decipiens
   wire3d(ellipse3d(x=mod1.deci$wn.sigma, centre = mod1.deci$wn.mu),
@@ -179,8 +177,7 @@ niches3D_m2 <- function(pback=TRUE,col.oc, sh.oc, a.el, col.el){
   
   # add occurrences for each species
   pch3d(occs[,occ.var2], pch = sh.oc[fsp], col = col.oc[fsp], cex=0.2)
-  #pch3d(viridis[,occ.var], pch = sh.oc[1], col = col.oc[1], cex=0.2)
-  
+
   #add estimated ellipsis
   # Doryopteris angelica
   wire3d(ellipse3d(x=mod2.ange$wn.sigma, centre = mod2.ange$wn.mu),
@@ -214,19 +211,14 @@ niches3D_m1(pback=F,col.oc, sh.oc, a.el, col.el)
 # add legend (optional)
 #legend3d("right", pch = sh.oc, col = col.oc, legend = spname)
 
-rgl.snapshot('./Results/M1-niches3d_27july2023_plot2.png', fmt = 'png')
-
-# # Save the current viewpoint
-# view <- niches1("userMatrix")
-# # Restore the saved viewpoint
-# niches1(userMatrix = view)
+rgl.snapshot('./Results/M1-niches3d_5feb2024_plot2.png', fmt = 'png')
 
 # 3D plot Model 2
 niches3D_m2(pback=F,col.oc, sh.oc, a.el, col.el)
 # add legend (optional)
 legend3d("right", pch = sh.oc, col = col.oc, legend = spname)
 
-rgl.snapshot('./Results/M2-niches3d_27july2023_plot3.png', fmt = 'png')
+rgl.snapshot('./Results/M2-niches3d_5feb2024_plot2.png', fmt = 'png')
 
 # PLOTS in geography ----------------------------------------
 # First calculate suitability index for the region of interest
@@ -259,8 +251,7 @@ smap1.viri <- niche.G(Estck=clim.m1, mu=mod1.viri$wn.mu, Sigma = mod1.viri$wn.si
 smap2.viri <- niche.G(Estck=clim.m2, mu=mod2.viri$wn.mu, Sigma = mod2.viri$wn.sigma,
                       save.ras="./Results/Model2/Suitability_m2_viridis.tif")
 # Doryopteris angelica
-# we'll use Mahalanobis model as Model 1
-smap1.ange <- niche.G(Estck=clim.m1, mu=mod1.ange$maha.mu, Sigma = mod1.ange$maha.sigma,
+smap1.ange <- niche.G(Estck=clim.m1, mu=mod1.ange$wn.mu, Sigma = mod1.ange$wn.sigma,
                       save.ras="./Results/Model1/Suitability_m1_angelica.tif")
 smap2.ange <- niche.G(Estck=clim.m2, mu=mod2.ange$wn.mu, Sigma = mod2.ange$wn.sigma,
                       save.ras="./Results/Model2/Suitability_m2_angelica.tif")
