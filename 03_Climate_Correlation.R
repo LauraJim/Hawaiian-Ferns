@@ -42,14 +42,14 @@ plot(hawaii)
 #hawaii.fort <- fortify(hawaii.tr) 
 
 # Get random sample of points inside the study area 
-sample <- as.data.frame(spatSample(climate, 8000, "random", xy=T,
+sample <- as.data.frame(spatSample(climate, 10000, "random", xy=T,
                      na.rm=TRUE, as.points=TRUE))
 #sample <- data.frame(rs.inE(region=hawaii.tr,N=10000,Estck=climate))
 colnames(sample) <- c("dif_rad","leaf_ai","rel_humidity",
                       "seasonality","hot_mean","dry_avg")
 
 # Save environmental conditions of random sample
-write.csv(sample,"./Climate layers/8Kpnts_hawaii_clim_values.csv",
+write.csv(sample,"./Climate layers/10Kpnts_hawaii_clim_values.csv",
           row.names = F)
 
 # Climatic values for occurrences ------------------------
