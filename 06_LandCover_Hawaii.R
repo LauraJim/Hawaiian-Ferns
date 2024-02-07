@@ -1,5 +1,4 @@
 # Adding information on land cover categories to the niche model output
-# Author: Laura Jimenez
 # First version: July, 2022
 
 # Packages & Functions --------------------------------------------------
