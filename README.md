@@ -21,5 +21,7 @@ This repository provides all the R code used to prepare data, make analyses, and
 - 06_LandCover_Hawaii.R: the first part of this script shows how we reclassified the land-cover raster into two different classifications of interest. Then, we combined the new land-cover maps with the binary maps of models 1 and 2 and calculated the intersection between the suitable area and each land-cover type in each classification.
 
 - 07_Model_comparison.R: code used to compare the model outputs when increasing the sample size of the random points used to estimate the distribution of climates in the species-accessible area. We compared model results between the models fitted with 8000 points and another model fitted with 10000 points.
+  
+- 08_Sampling_naturalized.R: code for generating a null expectation of overlap between natives' suitable area and naturalized occurrences. 
 
 - Occurrences folder: contains a CSV file with the occurrence data of all the native and non-native fern species, except *D. angelica* for which we do not share the data given conservation concerns.
