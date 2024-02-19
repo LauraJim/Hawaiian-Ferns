@@ -223,27 +223,28 @@ write.csv(master, paste0("./Results/LandCover/", nm, ".csv"), row.names = F)
 
 # CREATE BAR PLOTS -----------------------------------------------------------
 
-master1 <- read_csv("./Results/LandCover/LC_1stclassification-m12.csv") %>%
+library(tidyverse)
+library(viridis)
+library(ggpubr)
+library(ggbreak)
+
+# STEP 1: read the tables and get rid of the "Unsuitable" category since we are focusing on the suitable areas
+master1 <- read.csv("dat/LC_1stclassification-m12.csv", header = T, stringsAsFactors = T) %>%
   filter(LC.type != "Unsuitable")
-master2 <- read.csv("./Results/LandCover/LC_2ndclassification-m12.csv") %>%
+master2 <- read.csv("dat/LC_2ndclassification-m12.csv", header = T, stringsAsFactors = T) %>%
   filter(LC.type != "Unsuitable")
 
-# calculate percentage of suitable area covered by lc-type
-t1 <- master1 %>% dplyr::select(species, LC.type, n) %>%
-  group_by(species) %>% mutate(prop=n*100/sum(n))
-t2 <- master2 %>% dplyr::select(species, LC.type, n) %>%
-  group_by(species) %>% mutate(prop=n*100/sum(n))
-write.csv(rbind(t1,t2), "./Results/LandCover/LC_classification12-m12_percentages.csv",
-          row.names = F)
-
-# re-arrange the categories, if you want them to be plotted in a particular order
+# STEP 2: re-arrange the categories, if you want them to be plotted in a particular order
+# Agriculture, Alien Tree Plantation, Developed open space, Low intensity developed, 
+# Medium intensity developed, High intensity developed, Not Vegetated, Dry Forest, Dry Shrubland, 
+# Dry Grassland, Mesic Forest, Mesic Shrubland, Mesic Grassland, Wet Forest, Wet Shrubland, Wet Grassland, Wetland
 master1$LC.type <- factor(master1$LC.type, levels = levels(master1$LC.type)[c(1:3,8,9,7,13,4,6,5,10,12,11,15,17,16,18,14)])
 levels(master1$LC.type) <- paste0(1:length(levels(master1$LC.type)),": ", levels(master1$LC.type))
 
 master2$LC.type <- factor(master2$LC.type, levels = levels(master2$LC.type)[c(2,1,3:5)])
 levels(master2$LC.type)[1] <- "Developed                               "
 
-# FIRST PLOT
+#FIRST PLOT reformat data and plot 
 
 # custom colors:
 colors1 <- 
@@ -296,8 +297,13 @@ rbind(dat, rows_to_add) %>%
   ggplot(aes(x=factor(species), 
              y=rel_area, 
              fill=LC.type)) +
-
-    geom_bar(stat = "identity") +
+  #geom_bar(stat = "identity", 
+  #         position = "dodge") +
+  # geom_text(aes(label = label), 
+  #           position=position_dodge(.9),
+  #           size = 3,
+  #           vjust = -1) +
+  geom_bar(stat = "identity") +
   geom_text(aes(label = label),
             position = position_stack(vjust = 0.5),
             size = 4,
@@ -308,8 +314,11 @@ rbind(dat, rows_to_add) %>%
   xlab("") +
   scale_fill_manual(values = colors1,
                     name="Land cover") +
-
-    theme_pubclean() +
+  # scale_fill_viridis(discrete = T, 
+  #                    option="B", 
+  #                    name="") +
+  # guides(fill=guide_legend(ncol =3)) +
+  theme_pubclean() +
   theme(#legend.position = c(.59, .7),
     legend.direction = "vertical",
     legend.position = "right",
@@ -320,8 +329,7 @@ rbind(dat, rows_to_add) %>%
     axis.text.x = element_text(size = 20, face = "italic"),
     axis.title.y = element_text(size = 20)) -> stbar1 
 
-# SECOND PLOT 
-
+# SECOND PLOT reformat data and plot 
 # custom colors
 colors2 <- c(
   "Developed                               "= "#686868",
@@ -341,8 +349,14 @@ master2 %>%
   ylab("Proportion of suitable area") +
   scale_y_continuous(n.breaks = 10) +
   xlab("") + 
+  #scale_fill_viridis(discrete = T, 
+  #                   option="D", 
+  #                   name="") +
   scale_fill_manual(values = colors2,
-                    name="Land cover") +
+                    name="Land cover",
+                    labels = c("Developed                               ", 
+                               "Naturalized-dominant",
+                               "Mixed", "Native-dominant")) +
   theme_pubclean() +
   theme(legend.position = "right",
         legend.text = element_text(size = 13),
@@ -351,6 +365,6 @@ master2 %>%
         axis.title.y = element_text(size = 20)) -> stbar2 
 
 # arrange both bar plots into a single plot
-pdf("barplots.pdf", height = 18, width = 14)
+pdf("barplots_2.pdf", height = 18, width = 14)
 lc.barp <- ggpubr::ggarrange(stbar1, stbar2, ncol = 1, nrow = 2, heights = c(3,1));lc.barp
 dev.off()
