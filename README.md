@@ -8,7 +8,7 @@ This repository provides all the R code used to prepare data, make analyses, and
 
 - 00_Niche_functions.R: contains auxiliary functions needed to reproduce all the analyses and can be used to adapt our methodology to other studies.
 
-- 01_Create_climate_layers.R: code used to create temperature and precipitation-related variables from monthly means.
+- 01_Create_climate_layers.R: code used to create temperature and precipitation-related variables from monthly means.*
 
 - 02_Data_cleaning.R: data cleaning process applied to occurrence data.
 
@@ -25,3 +25,5 @@ This repository provides all the R code used to prepare data, make analyses, and
 - 08_Sampling_naturalized.R: code for generating a null expectation of overlap between natives' suitable area and naturalized occurrences. 
 
 - Occurrences folder: contains a CSV file with the occurrence data of all the native and non-native fern species, except *D. angelica* for which we do not share the data given conservation concerns.
+
+* The climatic layers and land cover datasets used in these analyses can be downloaded from Zenodo at https://zenodo.org/records/18985966
